@@ -2,21 +2,61 @@
 
 function user_greetings_menu() {
     $items = array();
-    $items['welcome'] = array(
+    $items['welcome_administrator'] = array(
             'title' => "Welcome",
-            'page callback' = 'say_welcome',
+            'page callback' => 'say_welcome_administrator',
             'access callback' => TRUE,
             'type' => MENU_CALLBACK,
         );
-    $items['farewell'] = array(
+    $items['welcome_authenticated_user'] = array(
+            'title' => "Welcome",
+            'page callback' => 'say_welcome_authenticated_user',
+            'access callback' => TRUE,
+            'type' => MENU_CALLBACK,
+        );
+    $items['farewell_administrator'] = array(
             'title' => "Farewell",
-            'page callback' => 'say_farewell',
+            'page callback' => 'say_farewell_administrator',
+            'access_callback' => TRUE,
+            'type' => MENU_CALLBACK,
+        );
+    $items['farewell_authenticated_user'] = array(
+            'title' => "Farewell",
+            'page callback' => 'say_farewell_authenticated_user',
             'access_callback' => TRUE,
             'type' => MENU_CALLBACK,
         );
     return $items;
 }
 
-function say_welcome() {
+function say_welcome_administrator() {
+    return '<h3>Welcome back boss</h3>';
+}
 
+function say_welcome_authenticated_user() {
+    return '<h3>Welcome back valued user</h3>';
+}
+
+function say_farewell_administrator() {
+    return '<h3>Farewell boss</h3>';
+}
+
+function say_farewell_authenticated_user() {
+    return '<h3>Farewell valued user</h3>';
+}
+
+function user_greetings_user_login(&$edit, $account) {
+    if(in_array('administrator', $account->roles)) {
+        $_GET['destination'] = 'welcome_administrator';
+    }elseif(in_array('authenticated user', $account->roles)) {
+        $_GET['destination'] = 'welcome_authenticated_user';
+    }
+}
+
+function user_greetings_user_logout(&$edit, $account) {
+    if(in_array('administrator', $account->roles)) {
+        $_GET['destination'] = 'farewell_administrator';
+    }elseif(in_array('authenticated user', $account->roles)) {
+        $_GET['destination'] = 'farewell_authenticated_user';
+    }
 }
